@@ -1,4 +1,4 @@
--- Kütüphane yükle (örnek temiz çalışan kütüphane)
+-- Kütüphane yükle
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/main/Library.lua"))()
 local ThemeManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/main/addons/ThemeManager.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/main/addons/SaveManager.lua"))()
@@ -19,17 +19,19 @@ local Tabs = {
     Settings = Window:AddTab('Settings'),
 }
 
-Tabs.Main:AddInput('Main', {
-    Default = '',
-    Numeric = false, -- sadece sayı mı yazı mı (false = her şey yazılabilir)
-    Finished = false, -- true olursa yazı bitince çalışır
-    Text = 'Vortex Premium, Gelişmiş olan oyun dünyasının en önemli oyunlarından birisi olan Counter Blox için yazılmış 3. parti yazılım olan Vortex Premium, Müşterilerine iyi hizmet ve eğlenceli bir deneyim yaşatmaya çalışır. İyi Oyunlar',
-    Placeholder = 'Bir şey yaz...',
-    Callback = function(Value)
-        print('Yazdığın Şey:', Value)
+-- Main sekmesine yazı ekle
+Tabs.Main:AddLabel("Vortex Premium, Gelişmiş olan oyun dünyasının en önemli oyunlarından birisi olan Counter Blox için yazılmış 3. parti yazılım olan Vortex Premium, Müşterilerine iyi hizmet ve eğlenceli bir deneyim yaşatmaya çalışır. İyi Oyunlar.")
+
+-- Main sekmesine Discord butonu ekle
+Tabs.Main:AddButton({
+    Text = 'Discord Linkini Kopyala',
+    Func = function()
+        setclipboard("https://discord.gg/B2FAHtRufp")
+        Library:Notify("Discord linki kopyalandı!")
     end
 })
 
+-- Diğer özellikler
 Tabs.Main:AddButton({
     Text = 'Aimbot Aç',
     Func = function()
@@ -52,6 +54,7 @@ Tabs.Settings:AddButton({
     end
 })
 
+-- Tema ve Kayıt ayarları
 ThemeManager:SetLibrary(Library)
 SaveManager:SetLibrary(Library)
 SaveManager:IgnoreThemeSettings()
