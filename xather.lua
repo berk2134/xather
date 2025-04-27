@@ -19,10 +19,10 @@ local Tabs = {
     Settings = Window:AddTab('Settings'),
 }
 
--- Main sekmesine yazı ekle
-Tabs.Main:AddLabel("Vortex Premium, Gelişmiş olan oyun dünyasının en önemli oyunlarından birisi olan Counter Blox için yazılmış 3. parti yazılım olan Vortex Premium, Müşterilerine iyi hizmet ve eğlenceli bir deneyim yaşatmaya çalışır. İyi Oyunlar.")
+-- Main sekmesinde sabit yazı (paragraf)
+Tabs.Main:AddParagraph("Vortex Premium", "Gelişmiş olan oyun dünyasının en önemli oyunlarından birisi olan Counter Blox için yazılmış 3. parti yazılım olan Vortex Premium, müşterilerine iyi hizmet ve eğlenceli bir deneyim yaşatmaya çalışır. İyi Oyunlar.")
 
--- Main sekmesine Discord butonu ekle
+-- Discord linki kopyalayan buton
 Tabs.Main:AddButton({
     Text = 'Discord Linkini Kopyala',
     Func = function()
@@ -31,7 +31,7 @@ Tabs.Main:AddButton({
     end
 })
 
--- Diğer özellikler
+-- Aimbot Aç butonu
 Tabs.Main:AddButton({
     Text = 'Aimbot Aç',
     Func = function()
@@ -39,6 +39,7 @@ Tabs.Main:AddButton({
     end
 })
 
+-- Aimbot Aktif toggle
 Tabs.Main:AddToggle('Aimbot Aktif', {
     Text = 'Aimbot Aktif Mi?',
     Default = false,
@@ -47,6 +48,7 @@ Tabs.Main:AddToggle('Aimbot Aktif', {
     end
 })
 
+-- Ayarlar sekmesi
 Tabs.Settings:AddButton({
     Text = 'Menüyü Kapat',
     Func = function()
@@ -54,7 +56,7 @@ Tabs.Settings:AddButton({
     end
 })
 
--- Tema ve Kayıt ayarları
+-- Tema ve kayıt sistemi
 ThemeManager:SetLibrary(Library)
 SaveManager:SetLibrary(Library)
 SaveManager:IgnoreThemeSettings()
