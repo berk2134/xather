@@ -19,6 +19,17 @@ local Tabs = {
     Settings = Window:AddTab('Settings'),
 }
 
+Tabs.Main:AddInput('Main', {
+    Default = '',
+    Numeric = false, -- sadece sayı mı yazı mı (false = her şey yazılabilir)
+    Finished = false, -- true olursa yazı bitince çalışır
+    Text = 'Vortex Premium, Gelişmiş olan oyun dünyasının en önemli oyunlarından birisi olan Counter Blox için yazılmış 3. parti yazılım olan Vortex Premium, Müşterilerine iyi hizmet ve eğlenceli bir deneyim yaşatmaya çalışır. İyi Oyunlar',
+    Placeholder = 'Bir şey yaz...',
+    Callback = function(Value)
+        print('Yazdığın Şey:', Value)
+    end
+})
+
 Tabs.Main:AddButton({
     Text = 'Aimbot Aç',
     Func = function()
