@@ -112,10 +112,17 @@ Tabs.Aim:AddButton({
     end
 })
 
+Tabs.Aim:AddButton({
+    Text = "Kilitlenme (Lock)",
+    Func = function()
+        print("Aimbot Kilitlenmesi Başlatıldı!")
+    end
+})
+
 -- Aimbot ayarları ve fonksiyonlar
 
 -- FOV Circle'ın konumunu güncelleme
-RunService.RenderStepped:Connect(function()
+game:GetService("RunService").RenderStepped:Connect(function()
     if aimlockEnabled then
         Aimlock()
     end
