@@ -1,28 +1,45 @@
--- Pepsi UI Kütüphanesini yükle
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/DeividComSono/PesiUI/main/Library.lua"))()
+-- Kütüphane yükle (örnek temiz çalışan kütüphane)
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/main/Library.lua"))()
+local ThemeManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/main/addons/ThemeManager.lua"))()
+local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/main/addons/SaveManager.lua"))()
 
--- Menü Oluştur
-local Window = Library:CreateWindow("Xather")
+local Window = Library:CreateWindow({
+    Title = "Basit Menü - Fluent Style",
+    Center = true,
+    AutoShow = true,
+})
 
--- Sekme (Tab) Oluştur
-local Tab = Window:CreateTab("Ana Menü")
+local Tabs = {
+    Main = Window:AddTab('Ana Menü'),
+    Settings = Window:AddTab('Ayarlar'),
+}
 
--- Toggle (Aç/Kapat butonu)
-local Toggle = Tab:CreateToggle("Aimbot Aç/Kapat", function(state)
-    if state then
-        print("Aimbot Açıldı!")
-        -- Buraya Aimbot'u açan kodu yazarsın
-    else
-        print("Aimbot Kapatıldı!")
-        -- Buraya Aimbot'u kapatan kodu yazarsın
+Tabs.Main:AddButton({
+    Text = 'Aimbot Aç',
+    Func = function()
+        print('Aimbot Açıldı!')
     end
-end)
+})
 
--- Buton
-local Button = Tab:CreateButton("Duvar Koruması Aktif Et", function()
-    print("Duvar koruması aktif edildi!")
-    -- Buraya duvar kontrolü kodu yazılır
-end)
+Tabs.Main:AddToggle('Aimbot Aktif', {
+    Text = 'Aimbot Aktif Mi?',
+    Default = false,
+    Callback = function(Value)
+        print('Aimbot Aktiflik Durumu:', Value)
+    end
+})
 
--- Label (Bilgi yazısı)
-local Label = Tab:CreateLabel("by Hezli Meymun")
+Tabs.Settings:AddButton({
+    Text = 'Menüyü Kapat',
+    Func = function()
+        Library:Unload()
+    end
+})
+
+ThemeManager:SetLibrary(Library)
+SaveManager:SetLibrary(Library)
+SaveManager:IgnoreThemeSettings()
+SaveManager:SetIgnoreIndexes({})
+SaveManager:SetFolder('PepsiUIExample')
+SaveManager:BuildConfigSection(Tabs.Settings)
+ThemeManager:ApplyToTab(Tabs.Settings)
