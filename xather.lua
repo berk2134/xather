@@ -4,14 +4,16 @@ local ThemeManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/main/addons/SaveManager.lua"))()
 
 local Window = Library:CreateWindow({
-    Title = "Basit Menü - Fluent Style",
+    Title = "Vortex Premium - https://discord.gg/B2FAHtRufp",
     Center = true,
     AutoShow = true,
 })
 
 local Tabs = {
-    Main = Window:AddTab('Ana Menü'),
+    Main = Window:AddTab('Main'),
     Settings = Window:AddTab('Ayarlar'),
+    Aim = Window:AddTab('Aimbot'),
+    Rage = Window:AddTab('Rage'),
 }
 
 Tabs.Main:AddButton({
