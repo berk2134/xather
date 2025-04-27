@@ -11,9 +11,12 @@ local Window = Library:CreateWindow({
 
 local Tabs = {
     Main = Window:AddTab('Main'),
-    Settings = Window:AddTab('Ayarlar'),
     Aim = Window:AddTab('Aimbot'),
     Rage = Window:AddTab('Rage'),
+    Visual = Window:AddTab('Visual'),
+    Movement = Window:AddTab('Movement'),
+    Misc = Window:AddTab('Misc'),
+    Settings = Window:AddTab('Settings'),
 }
 
 Tabs.Main:AddButton({
