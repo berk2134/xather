@@ -1,4 +1,4 @@
--- Kütüphane yükle
+-- Kütüphane yükleme
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/main/Library.lua"))()
 local ThemeManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/main/addons/ThemeManager.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/main/addons/SaveManager.lua"))()
@@ -19,12 +19,12 @@ local Tabs = {
     Settings = Window:AddTab('Settings'),
 }
 
--- Aimbot özelliklerini kontrol eden değişkenler
+-- Aimbot özellikleri
 local aimlockEnabled = false
 local fovEnabled = false
-local lockFOV = math.rad(8)  -- The smaller lock FOV angle in radians
-local lockFOVCircleRadius = 50  -- FOV Circle radius (adjustable)
-local toggleMouseButton = Enum.UserInputType.MouseButton1 -- Right mouse button (can change)
+local lockFOV = math.rad(8) -- Kilit FOV açısı (radyan cinsinden)
+local lockFOVCircleRadius = 50 -- FOV dairesinin çapı
+local toggleMouseButton = Enum.UserInputType.MouseButton1 -- Mouse butonu (sol tık)
 local fovCircle = nil
 
 -- FOV Circle çizme fonksiyonu
@@ -61,7 +61,7 @@ local function Aimlock()
         end
     end
 
-    -- Lock the camera onto the head of the closest player
+    -- Kamera kilitleme
     if closestPlayer then
         camera.CFrame = CFrame.new(camera.CFrame.Position, closestPlayer.Position)
     end
@@ -119,19 +119,17 @@ Tabs.Aim:AddButton({
     end
 })
 
--- Aimbot ayarları ve fonksiyonlar
-
--- FOV Circle'ın konumunu güncelleme
+-- Aimbot ve FOV fonksiyonlarını çalıştırma
 game:GetService("RunService").RenderStepped:Connect(function()
     if aimlockEnabled then
         Aimlock()
     end
 
-    -- FOV Circle'ı kameraya göre ayarlıyoruz
+    -- FOV Circle'ı kameraya göre ayarlama
     if fovCircle and fovEnabled then
         local camera = game.Workspace.CurrentCamera
         local mousePos = game.Players.LocalPlayer:GetMouse().Hit.p
-        fovCircle.Position = Vector3.new(mousePos.X, mousePos.Y, camera.CFrame.Position.Z)  -- adjust for 3D positioning
+        fovCircle.Position = Vector3.new(mousePos.X, mousePos.Y, camera.CFrame.Position.Z)  -- 3D pozisyon ayarlama
     end
 end)
 
