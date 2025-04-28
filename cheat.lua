@@ -1,52 +1,56 @@
-local Rayfield = loadstring(game:HttpGet('https://raw.githubusercontent.com/shlexware/Rayfield/main/source'))()
+local OrionLib = loadstring(game:HttpGet('https://raw.githubusercontent.com/shlexware/Orion/main/source'))()
 
-local Window = Rayfield:CreateWindow({
+local Window = OrionLib:MakeWindow({
     Name = "Vortex Premium",
-    LoadingTitle = "Vortex Premium",
-    LoadingSubtitle = "by YourName",
-    ConfigurationSaving = {
-        Enabled = true,
-        FolderName = "VortexPremium", -- Config dosyalarının kaydedileceği klasör
-        FileName = "Settings"
-    },
-    Discord = {
-        Enabled = false,
-        Invite = "yourdiscord", -- İstersen burayı ayarlarsın
-        RememberJoins = false
-    },
-    KeySystem = false,
+    HidePremium = false,
+    SaveConfig = true,
+    ConfigFolder = "VortexPremiumFolder"
 })
 
-local MainTab = Window:CreateTab("Main", 4483362458) -- Birinci Tab
-local Section = MainTab:CreateSection("Aimbot Settings")
+local Tab = Window:MakeTab({
+    Name = "Aimbot",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
 
--- Toggle
-local AimbotToggle = MainTab:CreateToggle({
+Tab:AddToggle({
     Name = "Aimbot Aç/Kapat",
-    CurrentValue = false,
-    Flag = "AimbotToggle",
+    Default = false,
     Callback = function(Value)
         print("Aimbot aktif mi: ", Value)
-    end,
+    end
 })
 
--- Slider
-local FOVSlider = MainTab:CreateSlider({
+Tab:AddSlider({
     Name = "FOV Ayarı",
-    Range = {10, 100},
+    Min = 10,
+    Max = 100,
+    Default = 50,
+    Color = Color3.fromRGB(255, 0, 0),
     Increment = 1,
-    Suffix = "px",
-    CurrentValue = 50,
-    Flag = "FOVSlider",
+    ValueName = "px",
     Callback = function(Value)
         print("Yeni FOV: ", Value)
-    end,
+    end
 })
 
--- Button
-local StartButton = MainTab:CreateButton({
+Tab:AddButton({
     Name = "Aimbot Başlat",
     Callback = function()
         print("Aimbot Başlatıldı!")
-    end,
+    end
+})
+
+-- Ayarlar Tabı
+local SettingsTab = Window:MakeTab({
+    Name = "Settings",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
+
+SettingsTab:AddButton({
+    Name = "Menüyü Kapat",
+    Callback = function()
+        OrionLib:Destroy()
+    end
 })
