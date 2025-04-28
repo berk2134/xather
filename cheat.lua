@@ -1,98 +1,12 @@
--- Kütüphane yükleme
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/main/Library.lua"))()
-local ThemeManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/main/addons/ThemeManager.lua"))()
-local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/main/addons/SaveManager.lua"))()
-
-local Window = Library:CreateWindow({
-    Title = "Game Settings Menu",
-    Center = true,
-    AutoShow = true,
-})
-
-local Tabs = {
-    Main = Window:AddTab('Main'),
-    Aimbot = Window:AddTab('Aimbot'),
-    Movement = Window:AddTab('Movement'),
-    Settings = Window:AddTab('Settings')
-}
-
-Tabs.Aimbot:AddToggle('AimbotActive', {
+Tabs.Aimbot:AddToggle('AimbotEnabled', {  -- ID'yi değiştirdim
     Text = 'Aimbot Aç/Kapat',
-    Default = false,
-    Callback = function(Value)
-        print('Aimbot aktif mi:', Value)
-    end
-})
-
-
-Tabs.Aimbot:AddSlider('FOV', {
-    Text = 'FOV Size',
-    Default = 16,
-    Min = 10,
-    Max = 50,
-    Rounding = 0,
-    Callback = function(Value)
-        print('yeni fov:', Value)
-    end
-})
-
--- Aimbot özellikleri
-local aimlockEnabled = false
-local fovEnabled = false
-local lockFOV = math.rad(8)  -- Kilit FOV açısı (radyan cinsinden)
-local lockFOVCircleRadius = 50  -- FOV dairesinin çapı
-local fovCircle = nil
-
--- FOV Circle çizme fonksiyonu
-local function DrawFOVCircle()
-    if not fovCircle then
-        fovCircle = Instance.new("Part")
-        fovCircle.Shape = Enum.PartType.Ball
-        fovCircle.Size = Vector3.new(0.1, 0.1, 0.1)
-        fovCircle.Anchored = true
-        fovCircle.CanCollide = false
-        fovCircle.Material = Enum.Material.Neon
-        fovCircle.Color = Color3.fromRGB(255, 0, 0)
-        fovCircle.Parent = game.Workspace
-    end
-end
-
--- Aimbot fonksiyonu
-local function Aimlock()
-    local localPlayer = game.Players.LocalPlayer
-    local mouse = localPlayer:GetMouse()
-    local camera = game.Workspace.CurrentCamera
-
-    local closestPlayer = nil
-    local closestAngle = lockFOV
-    for _, player in ipairs(game.Players:GetPlayers()) do
-        if player ~= localPlayer and player.Character and player.Character:FindFirstChild("Head") and player.Team ~= localPlayer.Team and player.Character.Humanoid.Health > 0 then
-            local head = player.Character.Head
-            local direction = (head.Position - camera.CFrame.Position).Unit
-            local angle = math.acos(direction:Dot(camera.CFrame.LookVector))
-            if angle < closestAngle then
-                closestAngle = angle
-                closestPlayer = head
-            end
-        end
-    end
-
-    -- Kamera kilitleme
-    if closestPlayer then
-        camera.CFrame = CFrame.new(camera.CFrame.Position, closestPlayer.Position)
-    end
-end
-
--- Aimbot ayarları
-Tabs.Aimbot:AddToggle("Aimbot Aktif", {
-    Text = "Aimbot Aktif Mi?",
     Default = false,
     Callback = function(Value)
         aimlockEnabled = Value
     end
 })
 
-Tabs.Aimbot:AddToggle("FOV Çiz", {
+Tabs.Aimbot:AddToggle('FOVDrawing', {  -- ID'yi değiştirdim
     Text = "FOV Çizimi Aktif Mi?",
     Default = false,
     Callback = function(Value)
@@ -108,7 +22,7 @@ Tabs.Aimbot:AddToggle("FOV Çiz", {
     end
 })
 
-Tabs.Aimbot:AddSlider("FOV Çapı", {
+Tabs.Aimbot:AddSlider('FOVSize', { -- ID'yi değiştirdim
     Text = "FOV Çapı",
     Min = 10,
     Max = 100,
@@ -134,34 +48,3 @@ Tabs.Aimbot:AddButton({
         print("Aimbot Kilitlenmesi Başlatıldı!")
     end
 })
-
--- Aimbot ve FOV fonksiyonlarını çalıştırma
-game:GetService("RunService").RenderStepped:Connect(function()
-    if aimlockEnabled then
-        Aimlock()
-    end
-
-    -- FOV Circle'ı kameraya göre ayarlama
-    if fovCircle and fovEnabled then
-        local camera = game.Workspace.CurrentCamera
-        local mousePos = game.Players.LocalPlayer:GetMouse().Hit.p
-        fovCircle.Position = Vector3.new(mousePos.X, mousePos.Y, camera.CFrame.Position.Z)  -- 3D pozisyon ayarlama
-    end
-end)
-
--- Diğer özellikler
-Tabs.Settings:AddButton({
-    Text = "Menüyü Kapat",
-    Func = function()
-        Library:Unload()
-    end
-})
-
--- Tema ve Kayıt ayarları
-ThemeManager:SetLibrary(Library)
-SaveManager:SetLibrary(Library)
-SaveManager:IgnoreThemeSettings()
-SaveManager:SetIgnoreIndexes({})
-SaveManager:SetFolder('MySettings')
-SaveManager:BuildConfigSection(Tabs.Settings)
-ThemeManager:ApplyToTab(Tabs.Settings)
