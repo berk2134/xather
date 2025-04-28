@@ -142,174 +142,37 @@ end)
 CreateMenuButton("🎯", "Aimbot", 2, function()
     ClearContent()
 
-    -- Aimbot switch kısmı
-    local AimbotSwitch = CreateSwitch(ContentFrame, UDim2.new(0, 20, 0, 20))
+    -- Aimbot açma/kapama toggle butonunu oluşturuyoruz
+    local Switch = CreateSwitch(ContentFrame, UDim2.new(0, 20, 0, 20))
 
+    -- Etiket (Label) kısmı, Aimbot başlığını gösterecek
     local Label = Instance.new("TextLabel", ContentFrame)
     Label.Size = UDim2.new(0, 200, 0, 25)
     Label.Position = UDim2.new(0, 80, 0, 20)
     Label.BackgroundTransparency = 1
-    Label.Text = "Aimbot Aç/Kapat"
+    Label.Text = "AIMBOT"
     Label.TextColor3 = Color3.fromRGB(255, 255, 255)
     Label.Font = Enum.Font.SourceSans
     Label.TextSize = 20
 
-    -- Aimbot aktif/pasif durumu (false olarak başlıyor)
-    local AimbotEnabled = false
-    local AimbotCircle = Instance.new("Frame", AimbotSwitch)
-    AimbotCircle.Size = UDim2.new(0, 20, 0, 20)
-    AimbotCircle.Position = UDim2.new(0, 2, 0, 2)
-    AimbotCircle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    AimbotCircle.Parent = AimbotSwitch
+    -- Aimbot'un aktif olup olmadığını kontrol edeceğiz.
+    local toggled = false -- Başlangıçta aimbot kapalı
 
-    local AimbotButton = Instance.new("TextButton", AimbotSwitch)
-    AimbotButton.Size = UDim2.new(1, 0, 1, 0)
-    AimbotButton.BackgroundTransparency = 1
-    AimbotButton.Text = ""
-    AimbotButton.MouseButton1Click:Connect(function()
-        AimbotEnabled = not AimbotEnabled
-        if AimbotEnabled then
-            TweenService:Create(AimbotCircle, TweenInfo.new(0.25), {Position = UDim2.new(1, -22, 0, 2)}):Play()
-            _G.AimbotEnabled = true
+    -- Düğmeye tıklanması durumunda işlemi yap
+    Switch.MouseButton1Click:Connect(function()
+        toggled = not toggled  -- Durum değiştir
+
+        if toggled then
+            -- Aimbot aktif olduğunda yapılacak işlemler:
+            aimlockEnabled = true  -- **BURADA DEĞİŞTİRECEĞİN ŞEYİ true YAP**
+            print("Aimbot Açıldı")  -- Konsola çıktı verir
         else
-            TweenService:Create(AimbotCircle, TweenInfo.new(0.25), {Position = UDim2.new(0, 2, 0, 2)}):Play()
-            _G.AimbotEnabled = false
+            -- Aimbot kapalı olduğunda yapılacak işlemler:
+            aimlockEnabled = false  -- **BURADA DEĞİŞTİRECEĞİN ŞEYİ false YAP**
+            print("Aimbot Kapalı")  -- Konsola çıktı verir
         end
     end)
 
-    -- Sensitivity Slider
-    local SensitivityLabel = Instance.new("TextLabel", ContentFrame)
-    SensitivityLabel.Size = UDim2.new(0, 200, 0, 25)
-    SensitivityLabel.Position = UDim2.new(0, 80, 0, 60)
-    SensitivityLabel.BackgroundTransparency = 1
-    SensitivityLabel.Text = "Sensitivity"
-    SensitivityLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-    SensitivityLabel.Font = Enum.Font.SourceSans
-    SensitivityLabel.TextSize = 20
-
-    local SensitivitySlider = Instance.new("Frame", ContentFrame)
-    SensitivitySlider.Size = UDim2.new(0, 200, 0, 25)
-    SensitivitySlider.Position = UDim2.new(0, 80, 0, 90)
-    SensitivitySlider.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
-
-    local SliderBar = Instance.new("Frame", SensitivitySlider)
-    SliderBar.Size = UDim2.new(0, 0, 1, 0)
-    SliderBar.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    SliderBar.BorderSizePixel = 0
-
-    local SensitivityButton = Instance.new("TextButton", SensitivitySlider)
-    SensitivityButton.Size = UDim2.new(0, 10, 1, 0)
-    SensitivityButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-    SensitivityButton.Text = ""
-    SensitivityButton.MouseButton1Drag:Connect(function()
-        local MousePos = UserInputService:GetMouseLocation().X
-        local SliderPos = SensitivitySlider.AbsolutePosition.X
-        local SliderWidth = SensitivitySlider.AbsoluteSize.X
-        local NewPos = math.clamp(MousePos - SliderPos, 0, SliderWidth)
-        SliderBar.Size = UDim2.new(0, NewPos, 1, 0)
-        _G.Sensitivity = NewPos / SliderWidth * 1  -- Sensitivity value between 0 and 1
-    end)
-
-    -- FOV Visible Switch
-    local FovVisibleLabel = Instance.new("TextLabel", ContentFrame)
-    FovVisibleLabel.Size = UDim2.new(0, 200, 0, 25)
-    FovVisibleLabel.Position = UDim2.new(0, 80, 0, 130)
-    FovVisibleLabel.BackgroundTransparency = 1
-    FovVisibleLabel.Text = "FOV Visible"
-    FovVisibleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-    FovVisibleLabel.Font = Enum.Font.SourceSans
-    FovVisibleLabel.TextSize = 20
-
-    local FovVisibleSwitch = CreateSwitch(ContentFrame, UDim2.new(0, 20, 0, 160))
-    local FovVisibleEnabled = false
-    local FovVisibleCircle = Instance.new("Frame", FovVisibleSwitch)
-    FovVisibleCircle.Size = UDim2.new(0, 20, 0, 20)
-    FovVisibleCircle.Position = UDim2.new(0, 2, 0, 2)
-    FovVisibleCircle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    FovVisibleCircle.Parent = FovVisibleSwitch
-
-    local FovVisibleButton = Instance.new("TextButton", FovVisibleSwitch)
-    FovVisibleButton.Size = UDim2.new(1, 0, 1, 0)
-    FovVisibleButton.BackgroundTransparency = 1
-    FovVisibleButton.Text = ""
-    FovVisibleButton.MouseButton1Click:Connect(function()
-        FovVisibleEnabled = not FovVisibleEnabled
-        if FovVisibleEnabled then
-            TweenService:Create(FovVisibleCircle, TweenInfo.new(0.25), {Position = UDim2.new(1, -22, 0, 2)}):Play()
-            _G.FovVisible = true
-        else
-            TweenService:Create(FovVisibleCircle, TweenInfo.new(0.25), {Position = UDim2.new(0, 2, 0, 2)}):Play()
-            _G.FovVisible = false
-        end
-    end)
-
-    -- FOV Büyüklüğü (Slider)
-    local FovSizeLabel = Instance.new("TextLabel", ContentFrame)
-    FovSizeLabel.Size = UDim2.new(0, 200, 0, 25)
-    FovSizeLabel.Position = UDim2.new(0, 80, 0, 200)
-    FovSizeLabel.BackgroundTransparency = 1
-    FovSizeLabel.Text = "FOV Büyüklüğü"
-    FovSizeLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-    FovSizeLabel.Font = Enum.Font.SourceSans
-    FovSizeLabel.TextSize = 20
-
-    local FovSizeSlider = Instance.new("Frame", ContentFrame)
-    FovSizeSlider.Size = UDim2.new(0, 200, 0, 25)
-    FovSizeSlider.Position = UDim2.new(0, 80, 0, 230)
-    FovSizeSlider.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
-
-    local FovSliderBar = Instance.new("Frame", FovSizeSlider)
-    FovSliderBar.Size = UDim2.new(0, 0, 1, 0)
-    FovSliderBar.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    FovSliderBar.BorderSizePixel = 0
-
-    local FovButton = Instance.new("TextButton", FovSizeSlider)
-    FovButton.Size = UDim2.new(0, 10, 1, 0)
-    FovButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-    FovButton.Text = ""
-    FovButton.MouseButton1Drag:Connect(function()
-        local MousePos = UserInputService:GetMouseLocation().X
-        local SliderPos = FovSizeSlider.AbsolutePosition.X
-        local SliderWidth = FovSizeSlider.AbsoluteSize.X
-        local NewPos = math.clamp(MousePos - SliderPos, 0, SliderWidth)
-        FovSliderBar.Size = UDim2.new(0, NewPos, 1, 0)
-        _G.FovSize = NewPos / SliderWidth * 180  -- Fov size value between 0 and 180
-    end)
-
-    -- FOV Circle Thickness Slider
-    local FovThicknessLabel = Instance.new("TextLabel", ContentFrame)
-    FovThicknessLabel.Size = UDim2.new(0, 200, 0, 25)
-    FovThicknessLabel.Position = UDim2.new(0, 80, 0, 280)
-    FovThicknessLabel.BackgroundTransparency = 1
-    FovThicknessLabel.Text = "FOV Circle Thickness"
-    FovThicknessLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-    FovThicknessLabel.Font = Enum.Font.SourceSans
-    FovThicknessLabel.TextSize = 20
-
-    local FovThicknessSlider = Instance.new("Frame", ContentFrame)
-    FovThicknessSlider.Size = UDim2.new(0, 200, 0, 25)
-    FovThicknessSlider.Position = UDim2.new(0, 80, 0, 310)
-    FovThicknessSlider.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
-
-    local FovThicknessSliderBar = Instance.new("Frame", FovThicknessSlider)
-    FovThicknessSliderBar.Size = UDim2.new(0, 0, 1, 0)
-    FovThicknessSliderBar.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    FovThicknessSliderBar.BorderSizePixel = 0
-
-    local FovThicknessButton = Instance.new("TextButton", FovThicknessSlider)
-    FovThicknessButton.Size = UDim2.new(0, 10, 1, 0)
-    FovThicknessButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-    FovThicknessButton.Text = ""
-    FovThicknessButton.MouseButton1Drag:Connect(function()
-        local MousePos = UserInputService:GetMouseLocation().X
-        local SliderPos = FovThicknessSlider.AbsolutePosition.X
-        local SliderWidth = FovThicknessSlider.AbsoluteSize.X
-        local NewPos = math.clamp(MousePos - SliderPos, 0, SliderWidth)
-        FovThicknessSliderBar.Size = UDim2.new(0, NewPos, 1, 0)
-        _G.FovThickness = NewPos / SliderWidth * 10  -- Circle thickness value between 0 and 10
-    end)
-
-end)
 CreateMenuButton("👁️", "ESP", 3, function()
     ClearContent()
 
@@ -365,103 +228,88 @@ UserInputService.InputBegan:Connect(function(input)
     end
 end)
 
-local Camera = workspace.CurrentCamera
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
-local TweenService = game:GetService("TweenService")
-local LocalPlayer = Players.LocalPlayer
-local Holding = false
+local camera = game.Workspace.CurrentCamera
 
-_G.AimbotEnabled = false 
-_G.TeamCheck = false -- If set to true then the script would only lock your aim at enemy team members.
-_G.AimPart = "Head" -- Where the aimbot script would lock at.
-_G.Sensitivity = 0 -- How many seconds it takes for the aimbot script to officially lock onto the target's aimpart.
+-- Aimbot Ayarları
+local aimlockEnabled = false
+local lockFOV = math.rad(8)  -- FOV açısı (radyan cinsinden)
+local lockFOVCircleRadius = 100  -- FOV dairesi çapı
 
-_G.CircleSides = 64 -- How many sides the FOV circle would have.
-_G.CircleColor = Color3.fromRGB(255, 255, 255) -- (RGB) Color that the FOV circle would appear as.
-_G.CircleTransparency = 0.7 -- Transparency of the circle.
-_G.CircleRadius = 80 -- The radius of the circle / FOV.
-_G.CircleFilled = false -- Determines whether or not the circle is filled.
-_G.CircleVisible = false -- Determines whether or not the circle is visible. 
-_G.CircleThickness = 0 -- The thickness of the circle.
+-- Aimbot'a Başlamak için Burada Ayarlar Yapılabilir
+local function Aimlock()
+    local localPlayer = Players.LocalPlayer
+    local mouse = localPlayer:GetMouse()
 
-local FOVCircle = Drawing.new("Circle")
-FOVCircle.Position = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
-FOVCircle.Radius = _G.CircleRadius
-FOVCircle.Filled = _G.CircleFilled
-FOVCircle.Color = _G.CircleColor
-FOVCircle.Visible = _G.CircleVisible
-FOVCircle.Radius = _G.CircleRadius
-FOVCircle.Transparency = _G.CircleTransparency
-FOVCircle.NumSides = _G.CircleSides
-FOVCircle.Thickness = _G.CircleThickness
+    local closestPlayer = nil
+    local closestAngle = lockFOV  -- Başlangıçta FOV açısı
+    for _, player in ipairs(Players:GetPlayers()) do
+        if player ~= localPlayer and player.Character and player.Character:FindFirstChild("Head") and player.Team ~= localPlayer.Team and player.Character.Humanoid.Health > 0 then
+            local head = player.Character.Head
+            local direction = (head.Position - camera.CFrame.Position).Unit
+            local angle = math.acos(direction:Dot(camera.CFrame.LookVector))
+            if angle < closestAngle then
+                closestAngle = angle
+                closestPlayer = head
+            end
+        end
+    end
 
-local function GetClosestPlayer()
-	local MaximumDistance = _G.CircleRadius
-	local Target = nil
-
-	for _, v in next, Players:GetPlayers() do
-		if v.Name ~= LocalPlayer.Name then
-			if _G.TeamCheck == true then
-				if v.Team ~= LocalPlayer.Team then
-					if v.Character ~= nil then
-						if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
-							if v.Character:FindFirstChild("Humanoid") ~= nil and v.Character:FindFirstChild("Humanoid").Health ~= 0 then
-								local ScreenPoint = Camera:WorldToScreenPoint(v.Character:WaitForChild("HumanoidRootPart", math.huge).Position)
-								local VectorDistance = (Vector2.new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y) - Vector2.new(ScreenPoint.X, ScreenPoint.Y)).Magnitude
-								
-								if VectorDistance < MaximumDistance then
-									Target = v
-								end
-							end
-						end
-					end
-				end
-			else
-				if v.Character ~= nil then
-					if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
-						if v.Character:FindFirstChild("Humanoid") ~= nil and v.Character:FindFirstChild("Humanoid").Health ~= 0 then
-							local ScreenPoint = Camera:WorldToScreenPoint(v.Character:WaitForChild("HumanoidRootPart", math.huge).Position)
-							local VectorDistance = (Vector2.new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y) - Vector2.new(ScreenPoint.X, ScreenPoint.Y)).Magnitude
-							
-							if VectorDistance < MaximumDistance then
-								Target = v
-							end
-						end
-					end
-				end
-			end
-		end
-	end
-
-	return Target
+    -- En yakına kilitlen
+    if closestPlayer then
+        camera.CFrame = CFrame.new(camera.CFrame.Position, closestPlayer.Position)
+    end
 end
 
-UserInputService.InputBegan:Connect(function(Input)
-    if Input.UserInputType == Enum.UserInputType.MouseButton2 then
-        Holding = true
+-- Aimbot'u tetiklemek için mouse tuşu
+
+-- Aimbot'u tetiklemek için Insert tuşuna basıldığında yapılacak işlem
+UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+    -- Eğer oyun zaten bu girişi işliyorsa (örneğin, menü açık vs.) işlemi geç
+    if gameProcessedEvent then return end
+    
+    -- Insert tuşuna basıldığını kontrol et
+    if input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == Enum.KeyCode.X then
+        aimlockEnabled = not aimlockEnabled  -- Toggle işlemi
+        print("Aimbot durumu: " .. (aimlockEnabled and "Aktif" or "Pasif"))
     end
 end)
 
-UserInputService.InputEnded:Connect(function(Input)
-    if Input.UserInputType == Enum.UserInputType.MouseButton2 then
-        Holding = false
-    end
-end)
-
+-- Aimbot aktifse her frame'de çalıştır
 RunService.RenderStepped:Connect(function()
-    FOVCircle.Position = Vector2.new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y)
-    FOVCircle.Radius = _G.CircleRadius
-    FOVCircle.Filled = _G.CircleFilled
-    FOVCircle.Color = _G.CircleColor
-    FOVCircle.Visible = _G.CircleVisible
-    FOVCircle.Radius = _G.CircleRadius
-    FOVCircle.Transparency = _G.CircleTransparency
-    FOVCircle.NumSides = _G.CircleSides
-    FOVCircle.Thickness = _G.CircleThickness
-
-    if Holding == true and _G.AimbotEnabled == true then
-        TweenService:Create(Camera, TweenInfo.new(_G.Sensitivity, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {CFrame = CFrame.new(Camera.CFrame.Position, GetClosestPlayer().Character[_G.AimPart].Position)}):Play()
+    if aimlockEnabled then
+        Aimlock()
     end
 end)
+
+-- FOV'nin dairesini göster
+local function DrawFOVCircle()
+    if not aimlockEnabled then return end
+    local localPlayer = Players.LocalPlayer
+    local mouse = localPlayer:GetMouse()
+    local fovCircle = Instance.new("Part")
+    fovCircle.Shape = Enum.PartType.Ball
+    fovCircle.Size = Vector3.new(lockFOVCircleRadius, lockFOVCircleRadius, lockFOVCircleRadius)
+    fovCircle.Position = mouse.Hit.p
+    fovCircle.Anchored = true
+    fovCircle.CanCollide = false
+    fovCircle.Transparency = 0.5
+    fovCircle.BrickColor = BrickColor.new("Bright blue")
+    fovCircle.Parent = workspace
+
+    -- FOV dairesi belirli bir süre sonra silinir
+    game:GetService("Debris"):AddItem(fovCircle, 0.1)
+end
+
+-- FOV dairesi göster
+RunService.RenderStepped:Connect(function()
+    if fovEnabled then
+        DrawFOVCircle()
+    end
+end)
+
+-- Menüdeki ayarları kullanarak kodu değiştirebilirsiniz:
+-- 1. Aimbot'u aktif edebilirsiniz (mouse sağ tıklama ile)
+-- 2. FOV dairesi ve FOV açısını menüden ayarlayabilirsiniz
