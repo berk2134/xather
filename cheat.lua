@@ -1,50 +1,52 @@
-Tabs.Aimbot:AddToggle('AimbotEnabled', {  -- ID'yi değiştirdim
-    Text = 'Aimbot Aç/Kapat',
-    Default = false,
-    Callback = function(Value)
-        aimlockEnabled = Value
-    end
+local Rayfield = loadstring(game:HttpGet('https://raw.githubusercontent.com/shlexware/Rayfield/main/source'))()
+
+local Window = Rayfield:CreateWindow({
+    Name = "Vortex Premium",
+    LoadingTitle = "Vortex Premium",
+    LoadingSubtitle = "by YourName",
+    ConfigurationSaving = {
+        Enabled = true,
+        FolderName = "VortexPremium", -- Config dosyalarının kaydedileceği klasör
+        FileName = "Settings"
+    },
+    Discord = {
+        Enabled = false,
+        Invite = "yourdiscord", -- İstersen burayı ayarlarsın
+        RememberJoins = false
+    },
+    KeySystem = false,
 })
 
-Tabs.Aimbot:AddToggle('FOVDrawing', {  -- ID'yi değiştirdim
-    Text = "FOV Çizimi Aktif Mi?",
-    Default = false,
+local MainTab = Window:CreateTab("Main", 4483362458) -- Birinci Tab
+local Section = MainTab:CreateSection("Aimbot Settings")
+
+-- Toggle
+local AimbotToggle = MainTab:CreateToggle({
+    Name = "Aimbot Aç/Kapat",
+    CurrentValue = false,
+    Flag = "AimbotToggle",
     Callback = function(Value)
-        fovEnabled = Value
-        if fovEnabled then
-            DrawFOVCircle()
-        else
-            if fovCircle then
-                fovCircle:Destroy()
-                fovCircle = nil
-            end
-        end
-    end
+        print("Aimbot aktif mi: ", Value)
+    end,
 })
 
-Tabs.Aimbot:AddSlider('FOVSize', { -- ID'yi değiştirdim
-    Text = "FOV Çapı",
-    Min = 10,
-    Max = 100,
-    Default = lockFOVCircleRadius,
+-- Slider
+local FOVSlider = MainTab:CreateSlider({
+    Name = "FOV Ayarı",
+    Range = {10, 100},
+    Increment = 1,
+    Suffix = "px",
+    CurrentValue = 50,
+    Flag = "FOVSlider",
     Callback = function(Value)
-        lockFOVCircleRadius = Value
-        if fovCircle then
-            fovCircle.Size = Vector3.new(Value, Value, Value)
-        end
-    end
+        print("Yeni FOV: ", Value)
+    end,
 })
 
-Tabs.Aimbot:AddButton({
-    Text = "Aimbot Başlat",
-    Func = function()
+-- Button
+local StartButton = MainTab:CreateButton({
+    Name = "Aimbot Başlat",
+    Callback = function()
         print("Aimbot Başlatıldı!")
-    end
-})
-
-Tabs.Aimbot:AddButton({
-    Text = "Kilitlenme (Lock)",
-    Func = function()
-        print("Aimbot Kilitlenmesi Başlatıldı!")
-    end
+    end,
 })
