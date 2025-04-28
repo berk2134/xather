@@ -140,10 +140,10 @@ CreateMenuButton("🏠", "Ana Menü", 1, function()
 end)
 
 CreateMenuButton("🎯", "Aimbot", 2, function()
-    ClearContent()    -- Aimbot switch kısmı
+    ClearContent()
 
     -- Aimbot switch kısmı
-    local Switch = CreateSwitch(ContentFrame, UDim2.new(0, 20, 0, 20))
+    local AimbotSwitch = CreateSwitch(ContentFrame, UDim2.new(0, 20, 0, 20))
 
     local Label = Instance.new("TextLabel", ContentFrame)
     Label.Size = UDim2.new(0, 200, 0, 25)
@@ -154,13 +154,8 @@ CreateMenuButton("🎯", "Aimbot", 2, function()
     Label.Font = Enum.Font.SourceSans
     Label.TextSize = 20
 
-    -- Aimbot aktif/pasif durumu
+    -- Aimbot aktif/pasif durumu (false olarak başlıyor)
     local AimbotEnabled = false
-    local AimbotSwitch = Instance.new("Frame", ContentFrame)
-    AimbotSwitch.Size = UDim2.new(0, 50, 0, 25)
-    AimbotSwitch.Position = UDim2.new(0, 20, 0, 60)
-    AimbotSwitch.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
-
     local AimbotCircle = Instance.new("Frame", AimbotSwitch)
     AimbotCircle.Size = UDim2.new(0, 20, 0, 20)
     AimbotCircle.Position = UDim2.new(0, 2, 0, 2)
@@ -175,16 +170,146 @@ CreateMenuButton("🎯", "Aimbot", 2, function()
         AimbotEnabled = not AimbotEnabled
         if AimbotEnabled then
             TweenService:Create(AimbotCircle, TweenInfo.new(0.25), {Position = UDim2.new(1, -22, 0, 2)}):Play()
-            -- Aimbot aktif olduğunda yapılacak işlemler
             _G.AimbotEnabled = true
         else
             TweenService:Create(AimbotCircle, TweenInfo.new(0.25), {Position = UDim2.new(0, 2, 0, 2)}):Play()
-            -- Aimbot pasif olduğunda yapılacak işlemler
             _G.AimbotEnabled = false
         end
     end)
-end)
 
+    -- Sensitivity Slider
+    local SensitivityLabel = Instance.new("TextLabel", ContentFrame)
+    SensitivityLabel.Size = UDim2.new(0, 200, 0, 25)
+    SensitivityLabel.Position = UDim2.new(0, 80, 0, 60)
+    SensitivityLabel.BackgroundTransparency = 1
+    SensitivityLabel.Text = "Sensitivity"
+    SensitivityLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    SensitivityLabel.Font = Enum.Font.SourceSans
+    SensitivityLabel.TextSize = 20
+
+    local SensitivitySlider = Instance.new("Frame", ContentFrame)
+    SensitivitySlider.Size = UDim2.new(0, 200, 0, 25)
+    SensitivitySlider.Position = UDim2.new(0, 80, 0, 90)
+    SensitivitySlider.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+
+    local SliderBar = Instance.new("Frame", SensitivitySlider)
+    SliderBar.Size = UDim2.new(0, 0, 1, 0)
+    SliderBar.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    SliderBar.BorderSizePixel = 0
+
+    local SensitivityButton = Instance.new("TextButton", SensitivitySlider)
+    SensitivityButton.Size = UDim2.new(0, 10, 1, 0)
+    SensitivityButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+    SensitivityButton.Text = ""
+    SensitivityButton.MouseButton1Drag:Connect(function()
+        local MousePos = UserInputService:GetMouseLocation().X
+        local SliderPos = SensitivitySlider.AbsolutePosition.X
+        local SliderWidth = SensitivitySlider.AbsoluteSize.X
+        local NewPos = math.clamp(MousePos - SliderPos, 0, SliderWidth)
+        SliderBar.Size = UDim2.new(0, NewPos, 1, 0)
+        _G.Sensitivity = NewPos / SliderWidth * 1  -- Sensitivity value between 0 and 1
+    end)
+
+    -- FOV Visible Switch
+    local FovVisibleLabel = Instance.new("TextLabel", ContentFrame)
+    FovVisibleLabel.Size = UDim2.new(0, 200, 0, 25)
+    FovVisibleLabel.Position = UDim2.new(0, 80, 0, 130)
+    FovVisibleLabel.BackgroundTransparency = 1
+    FovVisibleLabel.Text = "FOV Visible"
+    FovVisibleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    FovVisibleLabel.Font = Enum.Font.SourceSans
+    FovVisibleLabel.TextSize = 20
+
+    local FovVisibleSwitch = CreateSwitch(ContentFrame, UDim2.new(0, 20, 0, 160))
+    local FovVisibleEnabled = false
+    local FovVisibleCircle = Instance.new("Frame", FovVisibleSwitch)
+    FovVisibleCircle.Size = UDim2.new(0, 20, 0, 20)
+    FovVisibleCircle.Position = UDim2.new(0, 2, 0, 2)
+    FovVisibleCircle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    FovVisibleCircle.Parent = FovVisibleSwitch
+
+    local FovVisibleButton = Instance.new("TextButton", FovVisibleSwitch)
+    FovVisibleButton.Size = UDim2.new(1, 0, 1, 0)
+    FovVisibleButton.BackgroundTransparency = 1
+    FovVisibleButton.Text = ""
+    FovVisibleButton.MouseButton1Click:Connect(function()
+        FovVisibleEnabled = not FovVisibleEnabled
+        if FovVisibleEnabled then
+            TweenService:Create(FovVisibleCircle, TweenInfo.new(0.25), {Position = UDim2.new(1, -22, 0, 2)}):Play()
+            _G.FovVisible = true
+        else
+            TweenService:Create(FovVisibleCircle, TweenInfo.new(0.25), {Position = UDim2.new(0, 2, 0, 2)}):Play()
+            _G.FovVisible = false
+        end
+    end)
+
+    -- FOV Büyüklüğü (Slider)
+    local FovSizeLabel = Instance.new("TextLabel", ContentFrame)
+    FovSizeLabel.Size = UDim2.new(0, 200, 0, 25)
+    FovSizeLabel.Position = UDim2.new(0, 80, 0, 200)
+    FovSizeLabel.BackgroundTransparency = 1
+    FovSizeLabel.Text = "FOV Büyüklüğü"
+    FovSizeLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    FovSizeLabel.Font = Enum.Font.SourceSans
+    FovSizeLabel.TextSize = 20
+
+    local FovSizeSlider = Instance.new("Frame", ContentFrame)
+    FovSizeSlider.Size = UDim2.new(0, 200, 0, 25)
+    FovSizeSlider.Position = UDim2.new(0, 80, 0, 230)
+    FovSizeSlider.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+
+    local FovSliderBar = Instance.new("Frame", FovSizeSlider)
+    FovSliderBar.Size = UDim2.new(0, 0, 1, 0)
+    FovSliderBar.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    FovSliderBar.BorderSizePixel = 0
+
+    local FovButton = Instance.new("TextButton", FovSizeSlider)
+    FovButton.Size = UDim2.new(0, 10, 1, 0)
+    FovButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+    FovButton.Text = ""
+    FovButton.MouseButton1Drag:Connect(function()
+        local MousePos = UserInputService:GetMouseLocation().X
+        local SliderPos = FovSizeSlider.AbsolutePosition.X
+        local SliderWidth = FovSizeSlider.AbsoluteSize.X
+        local NewPos = math.clamp(MousePos - SliderPos, 0, SliderWidth)
+        FovSliderBar.Size = UDim2.new(0, NewPos, 1, 0)
+        _G.FovSize = NewPos / SliderWidth * 180  -- Fov size value between 0 and 180
+    end)
+
+    -- FOV Circle Thickness Slider
+    local FovThicknessLabel = Instance.new("TextLabel", ContentFrame)
+    FovThicknessLabel.Size = UDim2.new(0, 200, 0, 25)
+    FovThicknessLabel.Position = UDim2.new(0, 80, 0, 280)
+    FovThicknessLabel.BackgroundTransparency = 1
+    FovThicknessLabel.Text = "FOV Circle Thickness"
+    FovThicknessLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    FovThicknessLabel.Font = Enum.Font.SourceSans
+    FovThicknessLabel.TextSize = 20
+
+    local FovThicknessSlider = Instance.new("Frame", ContentFrame)
+    FovThicknessSlider.Size = UDim2.new(0, 200, 0, 25)
+    FovThicknessSlider.Position = UDim2.new(0, 80, 0, 310)
+    FovThicknessSlider.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+
+    local FovThicknessSliderBar = Instance.new("Frame", FovThicknessSlider)
+    FovThicknessSliderBar.Size = UDim2.new(0, 0, 1, 0)
+    FovThicknessSliderBar.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    FovThicknessSliderBar.BorderSizePixel = 0
+
+    local FovThicknessButton = Instance.new("TextButton", FovThicknessSlider)
+    FovThicknessButton.Size = UDim2.new(0, 10, 1, 0)
+    FovThicknessButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+    FovThicknessButton.Text = ""
+    FovThicknessButton.MouseButton1Drag:Connect(function()
+        local MousePos = UserInputService:GetMouseLocation().X
+        local SliderPos = FovThicknessSlider.AbsolutePosition.X
+        local SliderWidth = FovThicknessSlider.AbsoluteSize.X
+        local NewPos = math.clamp(MousePos - SliderPos, 0, SliderWidth)
+        FovThicknessSliderBar.Size = UDim2.new(0, NewPos, 1, 0)
+        _G.FovThickness = NewPos / SliderWidth * 10  -- Circle thickness value between 0 and 10
+    end)
+
+end)
 CreateMenuButton("👁️", "ESP", 3, function()
     ClearContent()
 
