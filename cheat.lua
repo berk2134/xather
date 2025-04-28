@@ -12,8 +12,29 @@ local Window = Library:CreateWindow({
 local Tabs = {
     Main = Window:AddTab('Main'),
     Aimbot = Window:AddTab('Aimbot'),
+    Movement = Window:AddTab('Movement'),
     Settings = Window:AddTab('Settings')
 }
+
+Tabs.Aimbot:AddToggle('AimbotActive', {
+    Text = 'Aimbot Aç/Kapat',
+    Default = false,
+    Callback = function(Value)
+        print('Aimbot aktif mi:', Value)
+    end
+})
+
+
+Tabs.Aimbot:AddSlider('FOV', {
+    Text = 'FOV Size',
+    Default = 16,
+    Min = 10,
+    Max = 50,
+    Rounding = 0,
+    Callback = function(Value)
+        print('yeni fov:', Value)
+    end
+})
 
 -- Aimbot özellikleri
 local aimlockEnabled = false
